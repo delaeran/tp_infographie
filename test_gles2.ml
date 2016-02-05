@@ -6,8 +6,9 @@ open Matrix
 
 (** simple example, using vertex arrays*)
 
-let rota = ref 0.
-
+let rotax = ref 0.
+let rotay = ref 0.
+let rotaz = ref 0.
 (** keep the current width,height and ratio in a reference *)
 let gwidth = ref 800 and gheight = ref 600
 let ratio = ref (float !gwidth /. float !gheight)
@@ -186,8 +187,9 @@ let elements = to_uint_bigarray [|
 (** the modelView matrix of the cube defining the position of the cube,
    from the current time *)
 let modelView t =
-  (mul (rotateY (10.*. !rota/.11.))
-     (mul (rotateZ (6.*. !rota/.7.)) (translate (-0.5) (-0.5) (-0.5))))
+(mul (rotateX (6.*. !rotax/.7.))
+	(mul (rotateY (10.*. !rotay/.11.))
+		(mul (rotateZ (6.*. !rotaz/.7.)) (translate (-0.5) (-0.5) (-0.5)))))
 
 let center = [|0.;0.;0.|]
 let lightPos = [|0.0;2.0;4.0;1.0|]
@@ -245,7 +247,10 @@ let draw () =
 (** call back for key and mouse, just for testing *)
 let _ = set_key_press_callback (fun ~key ~state ~x ~y ->
   if key = 65307 then exit_loop ();
-  if key = 65362 then rota := !rota +. 0.1;
+  if key = 65362 then rotay := !rotay +. 0.05;
+  if key = 65363 then rotaz := !rotaz +. 0.05;
+  if key = 65364 then rotax := !rotax +. 0.05;
+  
   Printf.printf "key: %d state: %d\n%!" key state)
 
 let _ = set_button_press_callback (fun ~button ~state ~x ~y ->
